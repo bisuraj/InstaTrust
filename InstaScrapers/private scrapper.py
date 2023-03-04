@@ -6,13 +6,13 @@ import csv
 L = instaloader.Instaloader()
 
 # Read usernames from file
-with open('users.txt', 'r') as f:
+with open('private_users.txt', 'r') as f:
     usernames = f.read().split(',')
 usernames = [u.strip() for u in usernames]
 
 # Write header row to CSV file
 fieldnames = ['Username', 'Profile Pic', 'Nums/Length Username', 'Full Name Words', 'Bio Length', 'External Url', 'Private', 'Verified', 'Business', '#Posts', '#Followers', '#Following', 'Fake']
-with open('output.csv', 'w', newline='') as f:
+with open('private_data.csv', 'w', newline='') as f:
     writer = csv.DictWriter(f, fieldnames=fieldnames)
     writer.writeheader()
 
@@ -37,11 +37,11 @@ for username in usernames:
         num_posts = profile.mediacount
         num_followers = profile.followers
         num_following = profile.followees
-        fake = 1
+        fake = 0
         nums_per_uname=round((num_username_nums/num_username_chars),3)
 
         # Write details to CSV file
-        with open('output.csv', 'a', newline='') as f:
+        with open('private_data.csv', 'a', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writerow({
                 'Username': username,
