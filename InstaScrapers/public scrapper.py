@@ -5,7 +5,7 @@ import datetime
 
 L = instaloader.Instaloader()
 
-
+L.login('privat_lyf', 'bisuraj39')   
 # Read usernames from file
 with open('public_users.txt', 'r') as f:
     usernames = f.read().split(',')
@@ -38,32 +38,32 @@ for username in usernames:
         num_posts = profile.mediacount
         num_followers = profile.followers
         num_following = profile.followees
-        
-        # Last post date and time
-        post = profile.get_posts()[0]
+           # Last post date and time
+        post_iterator = profile.get_posts()
+        post = next(post_iterator, None)
         post_date = post.date_local
-        now = datetime.datetime.now()
-        time_since_last_post = now - post_date
+        post_date = post_date.replace(tzinfo=None)
+        time_since_last_post = datetime.datetime.now() - post_date
         last_post_recent = 1 if time_since_last_post.days < 30 else 0
-        
-        # Percentage of posts made on the most active day of the week
+    
+         # Percentage of posts made on the most active day of the week
         post_days = [0,0,0,0,0,0,0]
-        for post in profile.get_posts():
-            post_days[post.date_local.weekday()] += 1
+        for post in post_iterator:
+             post_days[post.date_local.weekday()] += 1
         max_posts_day = max(post_days)
         post_single_day = round((max_posts_day / num_posts) * 100, 2)
-        
-        # Index of activity
-        last_month_posts = list(profile.get_posts()[:30])
+    
+    # Index of activity
+        last_month_posts = list(profile.get_posts())[:30]
         total_likes = sum([post.likes for post in last_month_posts])
         avg_likes_per_post = total_likes / len(last_month_posts)
         index_of_activity = round((num_posts / len(last_month_posts)) * (avg_likes_per_post / num_followers) * 100, 2)
-        
-        # Average likes per post
+    
+         # Average likes per post
         all_posts = list(profile.get_posts())
         total_likes = sum([post.likes for post in all_posts])
-        avg_likes_per_post = total_likes / len(all_posts)
-        
+        avg_likes_per_post = round((total_likes / len(all_posts)),3)
+    
         fake = 0
         
         nums_per_uname = round((num_username_nums / num_username_chars), 3)
